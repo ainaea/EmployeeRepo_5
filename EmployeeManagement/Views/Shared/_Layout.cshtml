@@ -10,10 +10,10 @@
     <environment include="Development">
         <link href="~/lib/bootstrap/css/bootstrap.css" rel="stylesheet" />
        
-        <script src="~/lib/jquery/jquery.js"></script>
+        @* <script src="~/lib/jquery/jquery.js"></script>
         <script src="~/lib/jquery-validate/jquery.validate.js"></script>
         <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
-        <script src="~/lib/bootstrap/js/bootstrap.js"></script>
+        <script src="~/lib/bootstrap/js/bootstrap.js"></script> *@
 
     </environment>
     <environment exclude="Development">
@@ -27,6 +27,10 @@
               asp-suppress-fallback-integrity="true"
               >
     </environment>
+    <script src="~/lib/jquery/jquery.js"></script>
+    <script src="~/lib/jquery-validate/jquery.validate.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+    <script src="~/lib/bootstrap/js/bootstrap.js"></script>
     
     <link href="~/css/site.css" rel="stylesheet" />
     <title>@ViewBag.Title</title>
@@ -88,9 +92,9 @@
         <div>
             @RenderBody()
         </div>
-        @if (IsSectionDefined("Script"))
+        @if (IsSectionDefined("Scripts"))
         {
-            @RenderSection("Script", true)
+            @RenderSection("Scripts", true)
         }
     </div>
 </body>

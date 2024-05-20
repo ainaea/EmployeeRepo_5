@@ -1,4 +1,5 @@
 using EmployeeManagement.Models;
+using EmployeeManagement.Security;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -51,9 +52,30 @@ namespace EmployeeManagement
                                 .Build();
                 option.Filters.Add(new AuthorizeFilter(policy));
             }).AddXmlSerializerFormatters();
+
+            services.ConfigureApplicationCookie(option =>           //configuring default route
+            {
+                option.AccessDeniedPath = new PathString("/Administration/AccessDenied");
+            });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("DeleteRolePolicy", policy => policy.RequireClaim("Delete Role")
+                                                                        /*.RequireClaim("Edit Role")*/);        //for chaining multiple claims to a policy
+                //options.AddPolicy("EditRolePolicy", policy => policy.RequireClaim("Edit Role", "true"));
+                //options.AddPolicy("EditRolePolicy", policy => policy.RequireClaim("Edit Role", "abc", "cdf"));        //for abc or cdf
+
+
+                //options.AddPolicy("EditRolePolicy", policy => policy.RequireAssertion( context => context.User.IsInRole("Edit Role") && context.User.HasClaim(claim => claim.Type == "Edit Role" && claim.Value == "true") || context.User.IsInRole("Super Admin")));               //using func for authorization
+
+                options.AddPolicy("EditRolePolicy", policy => policy.AddRequirements(new ManageAdminRolesAndClaimsRequirement()));
+
+                options.AddPolicy("AdminRolePolicy", policy => policy.RequireRole("Admin"));            //using Role with policy
+            });
             //services.AddSingleton<IEmployeeRepository, MockEmployeeRepository>();
             services.AddScoped<IEmployeeRepository, SQLEmployeeRepository>();
             //services.AddMvc(options => options.EnableEndpointRouting = false);
+            services.AddSingleton<IAuthorizationHandler, CanEditOnlyOtherAdminRolesAndClaimsHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

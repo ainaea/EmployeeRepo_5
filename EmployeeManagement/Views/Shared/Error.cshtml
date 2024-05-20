@@ -1,9 +1,11 @@
-﻿<h3>
-    An error occured while processing your request.
-    The support team is notified and we are working on the fix
-</h3>
-<h5>Please contact us at test@testc.com</h5>
-@*<hr />
+﻿@if (string.IsNullOrEmpty(ViewBag.ErrorTitle))
+{
+    <h3>
+        An error occured while processing your request.
+        The support team is notified and we are working on the fix
+    </h3>
+    <h5>Please contact us at test@test.com</h5>
+    @*<hr />
 
 <h3>
     Exception Details:
@@ -25,3 +27,9 @@
     <hr />
     <p>@ViewBag.StackTrace</p>
 </div>*@
+}
+else
+{
+    <h1 class="text-danger">@ViewBag.ErrorTitle</h1>
+    <h6 class="text-danger">@ViewBag.ErrorMessage</h6>
+}
