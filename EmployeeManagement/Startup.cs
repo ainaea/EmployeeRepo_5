@@ -71,11 +71,14 @@ namespace EmployeeManagement
                 options.AddPolicy("EditRolePolicy", policy => policy.AddRequirements(new ManageAdminRolesAndClaimsRequirement()));
 
                 options.AddPolicy("AdminRolePolicy", policy => policy.RequireRole("Admin"));            //using Role with policy
+                //options.InvokeHandlersAfterFailure = false;     //to prevent calling other handlers if prior handlers fail.
             });
             //services.AddSingleton<IEmployeeRepository, MockEmployeeRepository>();
             services.AddScoped<IEmployeeRepository, SQLEmployeeRepository>();
             //services.AddMvc(options => options.EnableEndpointRouting = false);
             services.AddSingleton<IAuthorizationHandler, CanEditOnlyOtherAdminRolesAndClaimsHandler>();
+            services.AddSingleton<IAuthorizationHandler, SuperAdminHandler>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
